@@ -4114,7 +4114,7 @@ See the docstring of `org-read-date' for details.")
     (error "unexpected")))
 
 (defun org-agenda-get-day-entries-extern (date)
-  (when org-agenda-log-directory
+  (when (and org-agenda-start-with-log-mode org-agenda-log-directory)
     (let ((month (nth 0 date))
           (day (nth 1 date))
           (year (nth 2 date)))
