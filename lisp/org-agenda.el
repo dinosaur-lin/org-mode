@@ -6448,15 +6448,14 @@ The flag is set if the currently compiled format contains a `%b'.")
 	  (cl-return (cadr entry))
 	(cl-return (apply #'create-image (cdr entry)))))))
 
-(defun org-agenda-format-item-category ()
-  (let ((category (if buffer-file-name
-                      (file-name-sans-extension
-                       (file-name-nondirectory buffer-file-name))
-                    "")))
-    (if (and
-         (string-match-p "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'" category)
-         (save-excursion
-           (re-search-backward "^\\* \\([^\n]+\\)" nil t)))
+(defun org-agenda-format-item-category (category)
+  (let (name)
+    (if (and buffer-file-name
+             (setq name (file-name-sans-extension
+                         (file-name-nondirectory buffer-file-name)))
+             (string-match-p "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\'" name)
+             (save-excursion
+               (re-search-backward "^\\* \\([^\n]+\\)" nil t)))
         ;; Extract file name from the log aggregate file.
         ;; See `org-agenda-log-directory'.
         (match-string-no-properties 1)
@@ -6499,7 +6498,7 @@ Any match of REMOVE-RE will be removed from TXT."
                  org-agenda-show-inherited-tags
                  org-agenda-hide-tags-regexp))
 
-      (let* ((category (or category (org-agenda-format-item-category)))
+      (let* ((category (org-agenda-format-item-category category))
              (category-icon (org-agenda-get-category-icon category))
              (category-icon (if category-icon
                                 (propertize " " 'display category-icon)
